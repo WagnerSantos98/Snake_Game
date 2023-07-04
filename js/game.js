@@ -1,25 +1,18 @@
+//Construções e variáveis do jogo
 var Snake = (function () {
-
     const INITIAL_TAIL = 4;
-    var fixedTail = true;
-  
+    var fixedTail = true; 
     var intervalID;
-  
     var tileCount = 10;
     var gridSize = 400/tileCount;
-  
+    
     const INITIAL_PLAYER = { x: Math.floor(tileCount / 2), y: Math.floor(tileCount / 2) };
-  
     var velocity = { x:0, y:0 };
     var player = { x: INITIAL_PLAYER.x, y: INITIAL_PLAYER.y };
-  
     var walls = false;
-  
     var fruit = { x:1, y:1 };
-  
     var trail = [];
     var tail = INITIAL_TAIL;
-  
     var reward = 0;
     var points = 0;
     var pointsMax = 0;
@@ -27,16 +20,16 @@ var Snake = (function () {
     var ActionEnum = { 'none':0, 'up':1, 'down':2, 'left':3, 'right':4 };
     Object.freeze(ActionEnum);
     var lastAction = ActionEnum.none;
-  
+
+//Configuração inicial do jogo
     function setup () {
       canv = document.getElementById('gc');
       ctx = canv.getContext('2d');
-  
       game.reset();
     }
-  
+
+//Fuções relacionadas ao jogo
     var game = {
-  
       reset: function () {
         ctx.fillStyle = 'grey';
         ctx.fillRect(0, 0, canv.width, canv.height);
@@ -47,16 +40,11 @@ var Snake = (function () {
         velocity.y = 0;
         player.x = INITIAL_PLAYER.x;
         player.y = INITIAL_PLAYER.y;
-        // this.RandomFruit();
         reward = -1;
-  
         lastAction = ActionEnum.none;
-  
         trail = [];
         trail.push({ x: player.x, y: player.y });
-        // for(var i=0; i<tail; i++) trail.push({ x: player.x, y: player.y });
-      },
-  
+      }, 
       action: {
         up: function () {
           if (lastAction != ActionEnum.down){
@@ -83,7 +71,6 @@ var Snake = (function () {
           }
         }
       },
-  
       RandomFruit: function () {
         if(walls){
           fruit.x = 1+Math.floor(Math.random() * (tileCount-2));
@@ -94,17 +81,13 @@ var Snake = (function () {
           fruit.y = Math.floor(Math.random() * tileCount);
         }
       },
-  
       log: function () {
         console.log('====================');
         console.log('x:' + player.x + ', y:' + player.y);
         console.log('tail:' + tail + ', trail.length:' + trail.length);
       },
-  
       loop: function () {
-  
         reward = -0.1;
-  
         function DontHitWall () {
           if(player.x < 0) player.x = tileCount-1;
           if(player.x >= tileCount) player.x = 0;
@@ -201,7 +184,8 @@ var Snake = (function () {
         return reward;
       }
     }
-  
+
+//Função para lidar com o posicionamento de teclas
     function keyPush (evt) {
       switch(evt.keyCode) {
         case 37: //dierita
@@ -313,8 +297,11 @@ var Snake = (function () {
     };
   
   })();
-  
+
+//Inicia o jogo com uma taxa de quadros por segundo de 8fps
   Snake.start(8);
+//Habilita o uso das teclas do teclado para controlar a cobra
   Snake.setup.keyboard(true);
+//Define se o tamanho da cauda da cobra será fixo(false)
   Snake.setup.fixedTail(false);
   
